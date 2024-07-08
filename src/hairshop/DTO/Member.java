@@ -1,6 +1,6 @@
 package hairshop.DTO;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Member { //MemberDTO의 추상화 class
@@ -14,7 +14,9 @@ public class Member { //MemberDTO의 추상화 class
 	protected int money; //결제용 머니 20억 이하숫자 이니까 int
 	protected boolean designer; //디자이너 권한 true: 관리페이지 false : 일반회원
 	
-	public static List<Member> members = new LinkedList<>();
+	
+
+	public static List<Member> members = new ArrayList<>();
 	
 	public static Member user = new Member();
 	//로그인한 member의 세션대신 사용할 static 객체
@@ -34,6 +36,64 @@ public class Member { //MemberDTO의 추상화 class
 		this.designer = designer;
 	}//생성자 end
 	
+	
+	//getter & setter method
+	
+	public String getId() {
+		return id;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public boolean isDesigner() {
+		return designer;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public void setDesigner(boolean designer) {
+		this.designer = designer;
+	}
 	
 	
 	

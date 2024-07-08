@@ -1,6 +1,6 @@
 package hairshop.DTO;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CutService {
@@ -9,7 +9,7 @@ public class CutService {
 	protected String contents; //시술설명 (시술에 대한 간략한 설명)
 	protected int price; //시술 가격
 	
-	public static List<CutService> cuteServices = new LinkedList<>();
+	public static List<CutService> cuteServices = new ArrayList<>();
 
 	//기본생성자
 	public CutService(){}

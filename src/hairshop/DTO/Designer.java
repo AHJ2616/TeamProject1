@@ -17,6 +17,40 @@ public class Designer { //DesignerDTO의 추상화 class
 	protected int reviewNum; // 디자이너가 받은 리뷰 갯수
 	//게시판에서 리뷰 오름/내림 차순으로 정렬하고 싶으면 사용하기.
 	
+	// getter & setter method
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public int getReviewNum() {
+		return reviewNum;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public void setReviewNum(int reviewNum) {
+		this.reviewNum = reviewNum;
+	}
+	
 	
 	
 }//class end
