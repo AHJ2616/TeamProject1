@@ -16,7 +16,6 @@ public class Review {
 	//int로 할 경우 : 계산을 통해서 X일전 , X개월전 등으로 표기가능
 	
 	
-	public static List<Review> reviews = new ArrayList<>();
 
 	//기본 생성장
 	public Review(){}

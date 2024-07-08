@@ -1,7 +1,9 @@
-package hairshop.SV;
+package hairshop.service;
 
 import java.util.List;
 import java.util.Scanner;
+
+import hairshop.Main;
 import hairshop.DTO.CutService;
 import hairshop.DTO.Designer;
 import hairshop.DTO.Member;
@@ -329,6 +331,7 @@ public class UserService {
 						if (members.get(i).getId().equals(user.getId())) {
 							System.out.println(user.getName() + "님 안녕히 가세요 .");
 							members.remove(i);
+							Main.main(null);
 						} // if end
 					} // if end
 				} // for end
@@ -353,7 +356,7 @@ public class UserService {
 		System.out.println("현재 잔고 : " + user.getMoney());
 		System.out.print("충전 할 금액 입력 : ");
 		int chargeMoney = scanner.nextInt();
-		user.setMoney(chargeMoney);
+		user.setMoney(chargeMoney+user.getMoney());
 		System.out.println("충전 완료!");
 		System.out.println("현재 잔고 : " + user.getMoney());
 
