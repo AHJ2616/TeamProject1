@@ -1,7 +1,6 @@
 package hairshop.DTO;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Shop {// ShopDTO의 추상화 class
 	//필드
@@ -11,7 +10,7 @@ public class Shop {// ShopDTO의 추상화 class
 	protected int price; 	//시술들 중에서 가장 비용이 적은 값 
 	//ex) 매장전체의 시술중에서 가장 싼게 앞머리 커트 5,000원 이면 price = 5000
 	
-	public static List<Shop> shops = new ArrayList<>();
+	
 	
 
 	
