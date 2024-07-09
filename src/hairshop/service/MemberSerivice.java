@@ -57,9 +57,7 @@ public class MemberSerivice extends Member {// 로그인 회원가입
 		Member member1 = new Member(id1,pw1,name1,email1,phone1,false);
 		members.add(member1);
 		System.out.println(member1.getName()+"님의 회원가입이 완료되었습니다!");
-for(Member x :members) {
-			System.out.println(x.toString());
-		}
+
 		return members;
 		
 	}//회원가입 method end

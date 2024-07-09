@@ -3,6 +3,7 @@ package hairshop.service;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import hairshop.DTO.Designer;
@@ -21,7 +22,7 @@ public class DesignerService extends Designer {
       switch(designSelect) {
       case 1:
          System.out.println("스케쥴 관리를 시작합니다.");
-         designerSC(scanner);
+         designerSC(scanner,schedule);
          break;
       case 2:
          System.out.println("예약을 확인합니다.");
@@ -42,7 +43,7 @@ public class DesignerService extends Designer {
    } // 디자이너 본체 메뉴 종료
    
    
-   public static void designerSC(Scanner scanner) {
+   public static void designerSC(Scanner scanner,Map<String,Map<String,String>> schedule) {
       System.out.println("--------스케쥴 관리--------");
       System.out.println("1.일정관리 | 2. 종료");
       int sc = scanner.nextInt();
@@ -103,7 +104,7 @@ public class DesignerService extends Designer {
         }
         }
    
-   public static void addCal(Scanner scanner) {
+   public static void addCal(Scanner scanner,Map<String,Map<String,String>> schedule) {
       
       System.out.println("1.휴무 | 2.휴무취소 | 3.종료 ");
       System.out.print(">>>");

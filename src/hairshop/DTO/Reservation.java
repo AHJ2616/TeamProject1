@@ -1,12 +1,13 @@
 package hairshop.DTO;
 
+
 import java.util.Map;
 
 public class Reservation {
 
    protected String shop;
    protected String designer;
-   protected Map<String, String> date;
+   protected String date;
    protected Map<String, String> time;
    protected String cutSV;
    protected String id;
@@ -27,7 +28,7 @@ public class Reservation {
       return designer;
    }
 
-   public Map<String, String> getDate() {
+   public String getDate() {
       return date;
    }
 
@@ -47,8 +48,8 @@ public class Reservation {
       this.designer = designer;
    }
 
-   public void setDate(Map<String, String> map) {
-      this.date = map;
+   public void setDate(String string) {
+      this.date = string;
    }
 
    public void setTime(Map<String, String> map) {
@@ -61,7 +62,7 @@ public class Reservation {
 
    @Override
    public String toString() {
-      return "미용실 : " + shop + "\n디자이너 : " + designer + "\n날짜 : " + date + "\n시간 : " + time + "\n시술내용 : " + cutSV;
+      return "미용실 : " + shop + "\n디자이너 : " + designer + "\n날짜,시간 : " + date + "\n시술내용 : " + cutSV;
 
    }
 

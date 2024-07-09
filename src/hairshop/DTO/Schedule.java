@@ -4,9 +4,14 @@ import java.util.Map;
 
 public class Schedule {
 	
-		public static Map<String,Map<String,String>> schedule = new HashMap<>();
-		
-		public void setSchedule(Map<String,Map<String,String>> schedule) {
+	Map<String,Map<String,String>> schedule1 = new HashMap<>();
+		public void dfdf() {
+			schedule1 = setSchedule(schedule1);
+			schedule1 = setSchedule2(schedule1);
+		}
+	
+	
+		public Map<String,Map<String,String>> setSchedule(Map<String,Map<String,String>> schedule) {
 			Map<String,String> july = new HashMap<>();
 			july.put("10:00","7월1일 10:00");
 			july.put("10:30","7월1일 10:30");
@@ -813,9 +818,11 @@ public class Schedule {
 			july31.put("21:00","7월31일 21:00");
 			july31.put("21:30","7월31일 21:30");
 			schedule.put("0731",july31); 
+			
+			return schedule;
 		}
 	
-		public void setSchedule2(Map<String,Map<String,String>> schedule) {
+		public Map<String,Map<String,String>> setSchedule2(Map<String,Map<String,String>> schedule) {
 			Map<String,String> august = new HashMap<>();
 			august.put("10:00","8월1일 10:00");
 			august.put("10:30","8월1일 10:30");
@@ -1623,6 +1630,7 @@ public class Schedule {
 			august31.put("21:30","8월31일 21:30");
 			schedule.put("0831",august31); 
 			
+			return schedule;
 		}
 
 

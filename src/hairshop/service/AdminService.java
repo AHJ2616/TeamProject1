@@ -8,6 +8,7 @@ import java.util.Scanner;
 import hairshop.DTO.CutService;
 import hairshop.DTO.Designer;
 import hairshop.DTO.Member;
+import hairshop.DTO.Schedule;
 import hairshop.DTO.Shop;
 
 public class AdminService extends Shop {
@@ -16,7 +17,8 @@ public class AdminService extends Shop {
 	static Scanner scannerInt = new Scanner(System.in);
 
 
-	public void adminMenu(List<Designer> designers,List<Shop> shops,List<Member> members,List<CutService> cutServices) {
+	public void adminMenu(List<Designer> designers,List<Shop> shops,List<Member> members,List<CutService> cutServices,Member user,Designer user2) {
+		
 		boolean run = true;
 		while (run) {
 		System.out.println("1.헤어컷 관리|2.디자이너 관리|3.뒤로가기|");
@@ -26,7 +28,7 @@ public class AdminService extends Shop {
 				editCut(designers,shops,members,cutServices);
 				break;
 			case 2:
-				editDesigner(designers,shops,members,cutServices);
+				editDesigner(designers,shops,members,cutServices,user,user2);
 				break;
 			case 3: // 메뉴 종료 버튼
 				run = false;
@@ -158,7 +160,8 @@ public class AdminService extends Shop {
 			
 	}// end cutEdit
 
-	public void editDesigner(List<Designer> designers,List<Shop> shops,List<Member> members,List<CutService> cutServices) { // 2. 디자이너 설정
+	public void editDesigner(List<Designer> designers,List<Shop> shops,List<Member> members,List<CutService> cutServices,Member user,Designer user2) { // 2. 디자이너 설정
+		Schedule sch = new Schedule();
 		System.out.println("------- 디자이너 설정 -------");
 		System.out.println("|1.권한부여|2.권한삭제|3.뒤로가기|");
 		int select = scanner.nextInt();
@@ -171,6 +174,12 @@ public class AdminService extends Shop {
 					for (int i = 0; i < members.size(); i++) {
 						if (members.get(i).getId().equals(magIn)) {
 							members.get(i).setDesigner(true);
+							Designer designer1 = new Designer();
+							designer1.setName(members.get(i).getName()); //이름 옮겨주기
+							designer1.setId(members.get(i).getId()); //아이디 옮겨주기
+							designer1.setShopName(user2.getShopName()); //매장이름 옮겨주기
+							designer1.schedule= sch.setSchedule(designer1.schedule);
+							designer1.schedule= sch.setSchedule2(designer1.schedule);
 							break;
 						} // end if
 					} // end for
@@ -205,4 +214,26 @@ public class AdminService extends Shop {
 
 	} // end editDesigner
 
+	public List<Designer> setDesigners(List<Designer> designers,List<Member> members){//user값 디자이너배열에 넣기
+		Schedule sch = new Schedule();
+		for(int i=0;i<members.size();i++) {
+			if(members.get(i).isDesigner()==true) {
+				Designer x = new Designer(members.get(i).getName(),members.get(i).getId());
+				x.schedule= sch.setSchedule(x.schedule);
+				x.schedule= sch.setSchedule2(x.schedule);
+				designers.add(x);
+			}
+			
+		}//for end
+		
+		return designers;
+	}//method end
+	
+
+	public Designer setAdmin(Designer user2) {//매장주인 매장명입력
+		System.out.println("매장명을 입력해주세요");
+		String x = scanner.next();
+		user2.setShopName(x);
+		return user2;
+	}//method end
 }// end class
