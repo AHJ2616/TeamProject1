@@ -1,17 +1,21 @@
 package hairshop.service;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import hairshop.DTO.Designer;
+import hairshop.DTO.Member;
 import hairshop.DTO.Reservation;
+import hairshop.DTO.Review;
 
 public class DesignerService extends Designer {
    
-   public void designerMenu (Scanner scanner,List<Reservation> reservations) { // 디자이너 본체 메뉴
+   public void designerMenu (Scanner scanner,List<Reservation> reservations
+         ,List<Review> reviews , Member user) { // 디자이너 본체 메뉴
       boolean designer = true;
       
       while(designer) {
@@ -22,15 +26,15 @@ public class DesignerService extends Designer {
       switch(designSelect) {
       case 1:
          System.out.println("스케쥴 관리를 시작합니다.");
-         designerSC(scanner,schedule);
+         designerSC(scanner,reservations,user);
          break;
       case 2:
          System.out.println("예약을 확인합니다.");
-         
+         ShowRe(reservations, user);
          break;
       case 3:
          System.out.println("리뷰를 확인합니다.");
-         
+         showReview(scanner, reviews,user);
          break;
       case 4:
          System.out.println("디자이너 메뉴를 종료합니다.");
@@ -43,21 +47,40 @@ public class DesignerService extends Designer {
    } // 디자이너 본체 메뉴 종료
    
    
-   public static void designerSC(Scanner scanner,Map<String,Map<String,String>> schedule) {
+   public static void designerSC(Scanner scanner, List<Reservation> reservations,  Member user) {
       System.out.println("--------스케쥴 관리--------");
       System.out.println("1.일정관리 | 2. 종료");
       int sc = scanner.nextInt();
       switch(sc) { 
       case 1:
-      System.out.print("스케쥴관리 (년): ");
-           int year = scanner.nextInt();
-           System.out.print("스케쥴관리 (1-12월): ");
-           int month = scanner.nextInt();
-           System.out.println("일정을 추가할 날짜를 선택하세요:");
+         Calendar cal = Calendar.getInstance();
+         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd E");
+         System.out.println(df.format(cal.getTime()));
+         System.out.println("SU MO TU WE TH FR SA");
+
+         int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+         cal.set(Calendar.DATE, 1);
+         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+         for (int i = 1; i < dayOfWeek; i++) {
+            System.out.print("   ");
+         }
+         for (int i = 1; i <= lastDay; i++) {
+            System.out.printf("%02d ", i);
+            if (dayOfWeek % 7 == 0) {
+               System.out.println();
+            }
+            dayOfWeek++;
+         }//달력
+         ShowRe(reservations,user);
+         System.out.println("\n예약을 막으실 날짜를 입력해주세요.  ex) 0709 ");
          System.out.print(">>>");
-         int dat = scanner.nextInt();
-      printCalendar(year, month); // 캘린더 출력
-      
+         String selectedDay = scanner.next();
+         System.out.println("예약을 막으실 시간을 입력해주세요.(10:00 ~ 21:30)  ex) 10:30");
+         System.out.print(">>>");
+         String selectedTime = scanner.next();
+         System.out.println("해당시간에 예약금지 조치되었습니다.");
       break;
       case 2:
          System.out.println("디자이너 메뉴로 돌아갑니다.");
@@ -68,61 +91,25 @@ public class DesignerService extends Designer {
    }
    
    
-
-   public static void printCalendar(int year, int month) { // 달력 출력
-        Calendar calendar = Calendar.getInstance(); // 현재 시간을 가져옴
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1); // 현재 월의 날자
-
-        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        System.out.println("      " + year + "년 " + month + "월");
-        for (String day : days) {
-            System.out.print(day + " ");
-        }
-        System.out.println();
-
-        int currentDay = 1;
-
-        for (int i = 1; i < firstDayOfWeek; i++) {
-            System.out.print("    ");
-        }
-
-        while (currentDay <= daysInMonth) {
-            System.out.printf("%3d ", currentDay);
-            if ((firstDayOfWeek + currentDay - 1) % 7 == 0) {
-                System.out.println();
-            }
-            currentDay++;
-        }
-
-        if ((firstDayOfWeek + daysInMonth - 1) % 7 != 0) {
-            System.out.println();
-        }
-        }
+   public static void ShowRe(List<Reservation> reservations, Member user) {
+      System.out.println("\n------예약 현황------");
+      for(int i =0; i<reservations.size(); i++) {
+         if(user.getName().equals(reservations.get(i).getDesigner())) {
+            System.out.println("날짜 : "+reservations.get(i).getDate()+" 시술명 : "+reservations.get(i).getCutSV());
+         }
+      }
+   }
    
-   public static void addCal(Scanner scanner,Map<String,Map<String,String>> schedule) {
-      
-      System.out.println("1.휴무 | 2.휴무취소 | 3.종료 ");
-      System.out.print(">>>");
-      int add = scanner.nextInt();
-      switch(add) {
-      case 1:
-         
-         break;
-      case 2:
-         
-         break;
-      case 3:
-         System.out.println("스케쥴관리를 종료합니다.");
-         break;
-         default:
-            System.out.println(">>> 입력오류 <<<");
+   public static void showReview(Scanner scanner, List<Review> reviews, Member user ) { // 리뷰 불가
+      System.out.println("-------리뷰 확인-------");
+      for(int i =0; i < reviews.size(); i++ ) {
+    	  if(user.getName().equals(reviews.get(i).getDesigner())) {
+         System.out.println("작성자 : "+reviews.get(i).getName() + " 리뷰내용 : "+reviews.get(i).getReview());
+    	  }
       }
    }
    
    
+   
 } // class 종료
+

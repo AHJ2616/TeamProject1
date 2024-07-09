@@ -172,13 +172,14 @@ public String registerPhone() {
 }
 
 public List<Member> setMembers(List<Member> members){//멤버 샘플
-	Member member1 = new Member("sample1","samplepw1","김가위","kkk@kkk.com","12341234",true);
-	Member member2 = new Member("sample2","samplepw2","이샘플","kkk2@kkk.com","11111111",false);
-	Member member3 = new Member("manager1","managerpw1","나사장","kkk@kkk.com","12341234",true);
+	Member member1 = new Member("미용사","qwer1234","김가위","kkk@kkk.com","12341234",true);
+	Member member2 = new Member("손님","1234qwer","이샘플","kkk2@kkk.com","11111111",false);
+	Member member3 = new Member("manager1","managerpw1","나사장","kkk@kkk.com","12341234",false);
+	Member member4 = new Member("상엽디자이너","12341234","상엽 디자이너","sy@kkk.net","88884444",true);
 	members.add(member1);
 	members.add(member2);
 	members.add(member3);
-	
+	members.add(member4);
 	return members;
 }//멤버 샘플 method end
 }// class end

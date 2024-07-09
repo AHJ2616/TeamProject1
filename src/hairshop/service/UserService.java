@@ -16,7 +16,7 @@ public class UserService {
    Scanner scanner = new Scanner(System.in);
 
    public void memberService(Member user, List<Shop> shops, List<Member> members, List<Designer> designers,
-         List<CutService> cutServices, List<Reservation> reservations,Designer user2) {
+         List<CutService> cutServices, List<Reservation> reservations, Designer user2) {
       boolean run = true;
       System.out.println("손님 전용 메뉴 입니다.");
       while (run) {
@@ -27,12 +27,12 @@ public class UserService {
 
          case 49:
             System.out.println("예약 서비스로 이동 합니다.");
-            Reservation(scanner, user, shops, designers, cutServices, reservations,user2);
+            Reservation(scanner, user, shops, designers, cutServices, reservations, user2);
             break;
 
          case 50:
             System.out.println("예약확인 서비스로 이동합니다.");
-            CheckReservation(scanner, user, shops, designers, cutServices, reservations,user2);
+            CheckReservation(scanner, user, shops, designers, cutServices, reservations, user2);
             break;
 
          case 51:
@@ -64,7 +64,7 @@ public class UserService {
    } // memberService method end
 
    public void Reservation(Scanner scanner, Member user, List<Shop> shops, List<Designer> designers,
-         List<CutService> cutService, List<Reservation> reservations,Designer user2) {
+         List<CutService> cutService, List<Reservation> reservations, Designer user2) {
 
       Reservation newReservation = new Reservation(); // 예약 정보 객체 생성
 
@@ -137,7 +137,7 @@ public class UserService {
          System.out.print(">>>");
          String selectedTime = scanner.next();
 
-         System.out.println(user2.schedule.get(selectedDay).get(selectedTime));
+         System.out.println(designers.get(select3 - 1).schedule.get(selectedDay).get(selectedTime));
 
          System.out.println("시술 선택");
          for (int i = 0; i < cutService.size(); i++) {
@@ -149,13 +149,21 @@ public class UserService {
          System.out.print(">>>");
          int select6 = scanner.nextInt(); // 시술 번호 선택
 
+         if (user.getMoney() < cutService.get(select6 - 1).getPrice()) {
+            System.out.println("잔액이 부족합니다..");
+            return;
+         } else {
+            user.setMoney(user.getMoney() - cutService.get(select6 - 1).getPrice());
+            System.out.println("남은 잔액 : " + user.getMoney());
+         }
+
          // select3 : 키보드로 입력받은 디자이너의 번호( 실제 인덱스는 select3 -1 )
 
          // select6 : 키보드로 입력받은 시술 번호 ( 실제 인덱스는 select6 -1 )
 
          newReservation.setShop(shops.get(select - 1).getShopName());
          newReservation.setDesigner(designers.get(select3 - 1).getName());
-         newReservation.setDate(user2.schedule.get(selectedDay).get(selectedTime));
+         newReservation.setDate(designers.get(select3 - 1).schedule.get(selectedDay).get(selectedTime));
          newReservation.setCutSV(cutService.get(select6 - 1).getCut());
          newReservation.setId(user.getId());
 
@@ -175,7 +183,7 @@ public class UserService {
    }// Reservation Method end
 
    public void CheckReservation(Scanner scanner, Member user, List<Shop> shops, List<Designer> designers,
-         List<CutService> cutService, List<Reservation> reservations,Designer user2) {
+         List<CutService> cutService, List<Reservation> reservations, Designer user2) {
 
       List<Reservation> userReservations = new ArrayList<>();
       for (Reservation reservation : reservations) {
@@ -201,7 +209,7 @@ public class UserService {
          return;
       }
       System.out.println("선택할 메뉴의 번호를 입력 하세요");
-      System.out.println("1.디자이너 | 2.날짜 | 3.시간 | 4.시술 | 5.예약 취소");
+      System.out.println("1.디자이너 | 2.날짜 | 3.시술 | 4.예약 취소");
       System.out.print(">>>>>");
       int select1 = scanner.nextInt();
       switch (select1) {
@@ -216,8 +224,8 @@ public class UserService {
          System.out.print(">>>");
          int select2 = scanner.nextInt(); // 디자이너 선택
 
-         reservations.get(select - 1).setDesigner(designers.get(select2).getName()); // 예약된 디자이너를 새로 선택한 디자이너로 교체
-         System.out.println("변경 완료 : " + reservations.get(select).getDesigner());
+         reservations.get(select - 1).setDesigner(designers.get(select2 - 1).getName()); // 예약된 디자이너를 새로 선택한 디자이너로 교체
+         System.out.println("변경 완료 : " + reservations.get(select - 1).getDesigner());
          break;
 
       case 2:
@@ -242,20 +250,21 @@ public class UserService {
             }
             dayOfWeek++;
          }
-         System.out.println("현재 날짜 : " + reservations.get(select - 1).getDate());
+         System.out.println("현재 날짜,시간 : " + reservations.get(select - 1).getDate());
          System.out.print("변경할 날짜 입력");
          System.out.print(">>>");
          String modDate = scanner.next();
-         System.out.println("현재 시간 : " + reservations.get(select - 1).getTime());
          System.out.print("변경할 시간 입력");
          System.out.print(">>>");
          String modTime = scanner.next();
-         reservations.get(select - 1).setDate(user2.schedule.get(modDate).get(modTime));
-         System.out.println("변경 완료 : " + reservations.get(select).getDate());
+
+         userReservations.get(select - 1).setDate(designers.get(select - 1).schedule.get(modDate).get(modTime));
+
+         System.out.println("변경 완료 : " + userReservations.get(select - 1).getDate());
 
          break;
 
-      case 4:
+      case 3:
          System.out.println("현재 시술 : " + reservations.get(select - 1).getCutSV());
 
          System.out.println("변경할 시술 : ");
@@ -265,18 +274,18 @@ public class UserService {
          }
          System.out.print(">>>");
          int select5 = scanner.nextInt();
-         reservations.get(select).setCutSV(cutService.get(select5).getCut());
-         System.out.println("변경 완료 : " + reservations.get(select).getCutSV());
+         reservations.get(select - 1).setCutSV(cutService.get(select5 - 1).getCut());
+         System.out.println("변경 완료 : " + reservations.get(select - 1).getCutSV());
          break;
 
-      case 5:
+      case 4:
          System.out.println("선택하신 예약을 취소 합니다.");
          reservations.remove(select - 1);
          System.out.println("취소 완료");
          break;
 
       default:
-         System.out.println("1~5번만 입력 해주세요");
+         System.out.println("1~4번만 입력 해주세요");
       }
 
    }

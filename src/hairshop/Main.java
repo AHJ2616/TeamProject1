@@ -24,20 +24,26 @@ public class Main {
 	public static List<Member> members = new ArrayList<>();
 	public static List<CutService> cutServices = new ArrayList<>();
 	public static List<Reservation> reservations = new ArrayList<>();
-	public static List<Review> reivews = new ArrayList<>();
+	public static List<Review> reviews = new ArrayList<>();
 	
 	static { // 초기값 설정
 
 		// 매장 정보
-		shops.add(new Shop("차홍아르더", "서울 강남구", 30000)); // 미용실 1
+		shops.add(new Shop("차홍아르더", "서울 강남구", 33_000)); // 미용실 1
 		// 시술 정보 ↓샵 ↓시술명 ↓시술내용 ↓비용 ↓번호
-		cutServices.add(new CutService("차홍아르마", "남성컷트", "남성 기본 헤어컷", 30000));
-		cutServices.add(new CutService("차홍아르마", "여성컷트", "여성 기본 헤어컷", 50000));
+		cutServices.add(new CutService("차홍아르더", "남성컷트", "남성 기본 헤어컷", 33_000));
+		cutServices.add(new CutService("차홍아르더", "여성컷트", "여성 기본 헤어컷", 70_000));
+		cutServices.add(new CutService("차홍아르더", "남자 파마", "남성 기본 펌", 120_000));
+		cutServices.add(new CutService("차홍아르더", "여자 파마", "여성 기본 펌", 300_000));
+		cutServices.add(new CutService("차홍아르더", "염색", "기본기장 염색", 60_000));
 	
-		Designer designer2 = new Designer("김가위","sample1","차홍아르마");
-		Designer designer3 = new Designer("나사장","manager1","차홍아르마");
-		designers.add(designer2);
+		reservations.add(new Reservation("차홍아르더","상엽 디자이너","7월1일 12:30","염색","손님1"));
+		reservations.add(new Reservation("차홍아르더","김가위","7월1일 15:30","남성컷트","손님"));
+		reservations.add(new Reservation("차홍아르더","김가위","7월2일 16:00","남성컷트","손님"));
 		
+		   reviews.add(new Review("상엽 디자이너", "쁘띠쁘띠","손님1"));
+		   reviews.add(new Review("상엽 디자이너", "최고","손님2"));
+		   reviews.add(new Review("김가위", "머리 잘하세요","손님3"));
 	
 	}
 	
@@ -66,12 +72,9 @@ public class Main {
 		switch(select) {
 		case "1" : user = memberService.login(members,user);
 		if(user.getId().matches("^manager\\d*")){
-			if(user2.getId().equals(user.getId())&&user2.getShopName()==null)
-			{adminService.setAdmin(user2);}// 매니저아이디가 처음으로 로그인하는것이면 매장명 입력받기
-			
 			adminService.adminMenu(designers, shops, members, cutServices,user,user2);}
 		else {
-		if(user.isDesigner()) {designerService.designerMenu(sc, reservations);
+		if(user.isDesigner()) {designerService.designerMenu(sc, reservations,reviews,user);
 			
 			
 		} else {userService.memberService(user, shops, members, designers, cutServices, reservations,user2);}

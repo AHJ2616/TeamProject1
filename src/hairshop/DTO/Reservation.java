@@ -12,7 +12,22 @@ public class Reservation {
    protected String cutSV;
    protected String id;
 
-   public String getId() {
+   public Reservation(){}//기본생성자
+   
+  
+   public Reservation(String shop, String designer,String date , String cutSV, String id) {
+	super();
+	this.shop = shop;
+	this.designer = designer;
+	this.date = date;
+	this.cutSV = cutSV;
+	this.id = id;
+}
+
+
+
+
+public String getId() {
       return id;
    }
 
