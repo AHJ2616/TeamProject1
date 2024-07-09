@@ -20,16 +20,15 @@ public class MemberSerivice extends Member {// 로그인 회원가입
 					//index i번째 getId = id1이고 getPw = pw1 일때
 					user = members.get(i); // index i번째 맴버 객체 = user 객체와 같다.
 					System.out.println(user.getName()+ "회원님 로그인에 성공하였습니다.");
-					run=false; // 다음 메뉴로 넘기기
-					break;
+					return user;
 					
 				}//if end
-				System.out.println("로그인 정보가 일치하지 않습니다. 확인후 다시 시도해 주세요.");
-				menu1(members);
+				
 				
 				
 			}//for end
-			
+			System.out.println("로그인 정보가 일치하지 않습니다. 확인후 다시 시도해 주세요.");
+			menu1(members);
 
 		} // while end
 		return user;
@@ -72,18 +71,20 @@ for(Member x :members) {
 		System.out.println("\n사용하실 아이디를 입력해주세요");
 		System.out.print("입력 : ");
 		id1 = sc.next();
-		try {
-		for(int i=0;i<members.size();i++) {
-			if(members.get(i).getId()!=null) {
-			if(id.equals(members.get(i).getId()))
-					{System.out.println("중복되는 아이디 입니다. 다시 입력해주세요");}
-					}//if end
-			else {System.out.println("사용가능한 아이디 입니다.");
-			}//if end
-		}//for end
-		} catch(NullPointerException e) {}
 		
-		run=false;
+		for(int i=0;i<members.size();i++) {
+			 
+			if(id1.equals(members.get(i).getId()))
+					{System.out.println("중복되는 아이디 입니다. 다시 입력해주세요");
+					run=true;
+					}
+			
+		}//for end
+		 {System.out.println("사용가능한 아이디 입니다.");
+		 run=false;
+		 }
+		
+		
 		}//while end
 		return id1;
 	}//아이디 등록 method end
@@ -173,8 +174,12 @@ public String registerPhone() {
 }
 
 public List<Member> setMembers(List<Member> members){//멤버 샘플
-	Member member1 = new Member("sample1","samplepw1","김샘플","kkk@kkk.com","12341234",false);
+	Member member1 = new Member("sample1","samplepw1","김가위","kkk@kkk.com","12341234",true);
+	Member member2 = new Member("sample2","samplepw2","이샘플","kkk2@kkk.com","11111111",false);
+	Member member3 = new Member("manager1","managerpw1","나사장","kkk@kkk.com","12341234",true);
 	members.add(member1);
+	members.add(member2);
+	members.add(member3);
 	
 	return members;
 }//멤버 샘플 method end

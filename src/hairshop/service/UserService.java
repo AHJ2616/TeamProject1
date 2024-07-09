@@ -1,9 +1,11 @@
 package hairshop.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-
-import hairshop.Main;
 import hairshop.DTO.CutService;
 import hairshop.DTO.Designer;
 import hairshop.DTO.Member;
@@ -14,7 +16,7 @@ public class UserService {
 	Scanner scanner = new Scanner(System.in);
 
 	public void memberService(Member user, List<Shop> shops, List<Member> members, List<Designer> designers,
-			List<CutService> cutService, List<Reservation> reservations) {
+			List<CutService> cutServices, List<Reservation> reservations, Map<String, Map<String, String>> schedule) {
 		boolean run = true;
 		System.out.println("손님 전용 메뉴 입니다.");
 		while (run) {
@@ -25,13 +27,12 @@ public class UserService {
 
 			case 49:
 				System.out.println("예약 서비스로 이동 합니다.");
-				Reservaition(scanner, user, shops, designers, cutService, reservations);
+				Reservation(scanner, user, shops, designers, cutServices, reservations, schedule);
 				break;
 
 			case 50:
 				System.out.println("예약확인 서비스로 이동합니다.");
-				CheckReservation(scanner, user, shops, designers, cutService, reservations);
-
+				CheckReservation(scanner, user, shops, designers, cutServices, reservations, schedule);
 				break;
 
 			case 51:
@@ -62,23 +63,30 @@ public class UserService {
 		} // while end
 	} // memberService method end
 
-	public void Reservaition(Scanner scanner, Member user, List<Shop> shops, List<Designer> designers,
-			List<CutService> cutService, List<Reservation> reservations) {
+	public void Reservation(Scanner scanner, Member user, List<Shop> shops, List<Designer> designers,
+			List<CutService> cutService, List<Reservation> reservations, Map<String, Map<String, String>> schedule) {
 
-		Reservation newReservation = new Reservation();
-		Designer selected = new Designer();
+		Reservation newReservation = new Reservation(); // 예약 정보 객체 생성
 
 		System.out.println("현재 예약 가능한 매장 리스트 입니다.");
 
-		for (int i = 0; i < shops.size(); i++) {
-			System.out.println((i + 1) + "." + shops.get(i).getShopName());
+		if (shops.isEmpty()) {
+			System.out.println("예약 가능한 매장이 없습니다.");
+			return;
+		} // 예약가능한 매장이 없으면, 예약 메뉴로 복귀.
+
+		for (int i = 0; i < shops.size(); i++) { // 현재 예약 가능한 매장 리스트 출력
+			System.out.println((i + 1) + "번 " + shops.get(i).getShopName() + " " + shops.get(i).getLocation() + "점");
+			// i번 . xx xxx nn점
+			// 매장 리스트 출력
 		} // for end
 
-		System.out.println("번호를 입력하시면 해당 매장의 정보확인이 가능 합니다.");
+		System.out.println("번호를 입력하시면 해당 매장의 정보확인이 가능 합니다."); // 입력한 번호에 따라 매장이름, 지역, 가격 출력
 		int select = scanner.nextInt();
-		System.out.println(shops.get(select - 1).getShopName());
-		System.out.println(shops.get(select - 1).getLocation());
-		System.out.println(shops.get(select - 1).getPrice());
+		System.out.println("매장이름 : " + shops.get(select - 1).getShopName());
+		System.out.println("매장위치 : " + shops.get(select - 1).getLocation());
+		System.out.println("최저가 : " + shops.get(select - 1).getPrice());
+		System.out.println("디자이너 수 : " + designers.size());
 		System.out.println("1.예약 | 2.다른매장 보기");
 		int select2 = scanner.nextInt();
 
@@ -89,36 +97,43 @@ public class UserService {
 			System.out.println("디자이너 선택");
 			for (int i = 0; i < designers.size(); i++) {
 				System.out.println((i + 1) + ". " + designers.get(i).getName() + designers.get(i).getReviewNum());
-			}
-			System.out.println(">>>>");
-			int select3 = scanner.nextInt();
+			} // for end
+				// 디자이너 리스트 출력
+			System.out.print(">>>>");
+			if (designers.isEmpty()) {
+				System.out.println("예약 가능한 디자이너가 없습니다.");
+				return;
+			} // 예약가능한 매장이 없으면, 예약 메뉴로 복귀.
 
-			System.out.println("날짜 선택");
-			int x = 6;
-			for (int i = 0; i < selected.getDates().length; i++) {
-				if (selected.getDates()[i] != null) {
-					System.out.println((i + 1) + ". " + (designers.get(select3 - 1).getDates()[i]) + "일 ");
-					if ((i + 1) % x == 0) {
-						System.out.println();
-					}
+			int select3 = scanner.nextInt(); // 디자이너 번호 선택
+
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd E");
+			System.out.println(df.format(cal.getTime()));
+			System.out.println("SU MO TU WE TH FR SA");
+
+			int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+			cal.set(Calendar.DATE, 1);
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+			for (int i = 1; i < dayOfWeek; i++) {
+				System.out.print("   ");
+			}
+			for (int i = 1; i <= lastDay; i++) {
+				System.out.printf("%02d ", i);
+				if (dayOfWeek % 7 == 0) {
+					System.out.println();
 				}
+				dayOfWeek++;
 			}
-			int select4 = scanner.nextInt();
 
-			System.out.println("시간 선택");
-			for (int i = 0; i < selected.getTimes().length; i++) {
-				if (selected.getTimes()[i] != null) {
-					System.out.println((i + 1) + ". " + (designers.get(select3 - 1).getTimes()[i]) + " | ");
-					if ((i + 1) % x == 0) {
-						System.out.println();
-
-					}
-				}
-
-			}
-			int select5 = scanner.nextInt();
-
-			designers.get(select3 - 1).setTimes(null);
+			System.out.println("예약 하실 날짜를 입력해주세요.  ex) 0709 ");
+			System.out.print(">>>");
+			String selectedDay = scanner.next();
+			System.out.println("예약 시간을 입력해주세요.(10:00 ~ 21:30)  ex) 10:30");
+			System.out.print(">>>");
+			String selectedTime = scanner.next();
 
 			System.out.println("시술 선택");
 			for (int i = 0; i < cutService.size(); i++) {
@@ -126,18 +141,25 @@ public class UserService {
 				System.out.println(cutService.get(i).getContents());
 				System.out.println(cutService.get(i).getPrice());
 				System.out.println("=============================");
-			}
-			int select6 = scanner.nextInt();
+			} // 시술 리스트 출력
+			System.out.print(">>>");
+			int select6 = scanner.nextInt(); // 시술 번호 선택
+
+			// select3 : 키보드로 입력받은 디자이너의 번호( 실제 인덱스는 select3 -1 )
+
+			// select6 : 키보드로 입력받은 시술 번호 ( 실제 인덱스는 select6 -1 )
 
 			newReservation.setShop(shops.get(select - 1).getShopName());
 			newReservation.setDesigner(designers.get(select3 - 1).getName());
-			newReservation.setDate(selected.getDates()[select4 - 1]);
-			newReservation.setTime(selected.getTimes()[select5 - 1]);
+			newReservation.setDate(schedule.get(selectedDay));
+			newReservation.setTime(schedule.get(selectedTime));
 			newReservation.setCutSV(cutService.get(select6 - 1).getCut());
 			newReservation.setId(user.getId());
 
-			reservations.add(newReservation);
+			// 새로 만든 객체에 정보 저장.
 
+			reservations.add(newReservation);
+			// 객체를 배열에 추가.
 			System.out.println("예약 완료\t");
 
 		case 2:
@@ -145,23 +167,33 @@ public class UserService {
 
 		default:
 			System.out.println("1,2번만 입력 하세요");
-		}
+		}// switch 종료
 
 	}// Reservation Method end
 
 	public void CheckReservation(Scanner scanner, Member user, List<Shop> shops, List<Designer> designers,
-			List<CutService> cutService, List<Reservation> reservations) {
+			List<CutService> cutService, List<Reservation> reservations, Map<String, Map<String, String>> schedule) {
 
-		Designer selected = new Designer();
-		for (int i = 0; i < reservations.size(); i++) {
-			if (reservations.get(i).getId().equals(user.getId())) {
-				System.out.println((i + 1) + "번째 예약 " + reservations.get(i).toString());
-				System.out.println("==============================================");
+		List<Reservation> userReservations = new ArrayList<>();
+		for (Reservation reservation : reservations) {
+			if (reservation.getId().equals(user.getId())) {
+				userReservations.add(reservation);
 			}
-
 		}
-		System.out.print("수정할 예약번호 : " + "\n메뉴 복귀 : 0번입력");
+
+		if (userReservations.isEmpty()) {
+			System.out.println("예약이 없습니다.");
+			return;
+		}
+
+		for (int i = 0; i < userReservations.size(); i++) {
+			System.out.println((i + 1) + "번째 예약 " + userReservations.get(i).toString());
+			System.out.println("==============================================");
+		}
+
+		System.out.print("수정할 예약 번호를 입력하세요 (메뉴 복귀: 0) : ");
 		int select = scanner.nextInt();
+
 		if (select == 0) {
 			return;
 		}
@@ -172,51 +204,58 @@ public class UserService {
 		switch (select1) {
 
 		case 1:
-			System.out.println("현재 디자이너 : " + reservations.get(select - 1).getDesigner());
-
+			System.out.println("현재 디자이너 : " + reservations.get(select - 1).getDesigner()); // 현재 예약된 디자이너 출력
 			for (int i = 0; i < designers.size(); i++) {
 				System.out.println("변경 할 디자이너 : ");
 				System.out.println((i + 1) + "번 " + designers.get(i).getName());
-			}
 
-			int select2 = scanner.nextInt();
-			reservations.get(select - 1).setDesigner(designers.get(select2).getName());
+			} // for end // 디자이너 리스트 출력
+			System.out.print(">>>");
+			int select2 = scanner.nextInt(); // 디자이너 선택
+
+			reservations.get(select - 1).setDesigner(designers.get(select2).getName()); // 예약된 디자이너를 새로 선택한 디자이너로 교체
 			System.out.println("변경 완료 : " + reservations.get(select).getDesigner());
 			break;
 
 		case 2:
 			System.out.println("현재 날짜 : " + reservations.get(select - 1).getDate());
-			System.out.print("변경할 날짜 선택");
 
-			int x = 6;
-			for (int i = 0; i < selected.getDates().length; i++) {
-				if (selected.getDates()[i] != null) {
-					System.out.println((i + 1) + ". " + (designers.get(i - 1).getDates()[i]) + "일 ");
-					if ((i + 1) % x == 0) {
-						System.out.println();
-					}
-				}
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd E");
+			System.out.println(df.format(cal.getTime()));
+			System.out.println("SU MO TU WE TH FR SA");
+
+			int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+			cal.set(Calendar.DATE, 1);
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
+			for (int i = 1; i < dayOfWeek; i++) {
+				System.out.print("   ");
 			}
-			int select3 = scanner.nextInt();
-			reservations.get(select - 1).setDate(designers.get(select).getDates()[select3 - 1]);
+			for (int i = 1; i <= lastDay; i++) {
+				System.out.printf("%02d ", i);
+				if (dayOfWeek % 7 == 0) {
+					System.out.println();
+				}
+				dayOfWeek++;
+			}
+
+			System.out.print("변경할 날짜 입력");
+			System.out.print(">>>");
+			String modDate = scanner.next();
+			reservations.get(select - 1).setDate(schedule.get(modDate));
+
 			System.out.println("변경 완료 : " + reservations.get(select).getDate());
 
 			break;
 
 		case 3:
 			System.out.println("현재 시간 : " + reservations.get(select - 1).getTime());
-			System.out.print("변경할 시간 선택");
-			x = 6;
-			for (int i = 0; i < selected.getTimes().length; i++) {
-				if (selected.getTimes()[i] != null) {
-					System.out.println((i + 1) + ". " + (designers.get(i - 1).getTimes()[i]) + " | ");
-					if ((i + 1) % x == 0) {
-						System.out.println();
-					}
-				}
-			}
-			int select4 = scanner.nextInt();
-			reservations.get(select - 1).setTime(designers.get(select).getTimes()[select4 - 1]);
+			System.out.print("변경할 시간 입력");
+			System.out.print(">>>");
+			String modTime = scanner.next();
+			reservations.get(select - 1).setTime(schedule.get(modTime));
 			System.out.println("변경 완료 : " + reservations.get(select).getTime());
 
 			break;
@@ -225,9 +264,11 @@ public class UserService {
 			System.out.println("현재 시술 : " + reservations.get(select - 1).getCutSV());
 
 			System.out.println("변경할 시술 : ");
+
 			for (int i = 0; i < cutService.size(); i++) {
 				System.out.println((i + 1) + "번 " + cutService.get(i).getCut());
 			}
+			System.out.print(">>>");
 			int select5 = scanner.nextInt();
 			reservations.get(select).setCutSV(cutService.get(select5).getCut());
 			System.out.println("변경 완료 : " + reservations.get(select).getCutSV());
@@ -246,9 +287,9 @@ public class UserService {
 	}
 
 	public Member ModifyUser(Scanner scanner, Member user) {
-		System.out.println("ID 입력 : ");
+		System.out.print("ID 입력 : ");
 		String id = scanner.next();
-		System.out.println("PW 입력 : ");
+		System.out.print("PW 입력 : ");
 		String pw = scanner.next();
 
 		if (id.equals(user.getId()) && pw.equals(user.getPw())) {
@@ -273,9 +314,9 @@ public class UserService {
 				return user;
 
 			case 50:
-				System.out.println("현재 이메일 입력 : ");
+				System.out.print("현재 이메일 입력 : ");
 				String userEmail = scanner.next();
-				System.out.println("변경할 이메일 입력 : ");
+				System.out.print("변경할 이메일 입력 : ");
 				String modEmail = scanner.next();
 
 				if (userEmail.equals(user.getEmail())) {
@@ -287,9 +328,9 @@ public class UserService {
 				return user;
 
 			case 51:
-				System.out.println("현재 핸드폰 번호 입력 : ");
+				System.out.print("현재 핸드폰 번호 입력 : ");
 				String userPhone = scanner.next();
-				System.out.println("변경할 핸드폰 번호 입력 : ");
+				System.out.print("변경할 핸드폰 번호 입력 : ");
 				String modPhone = scanner.next();
 
 				if (userPhone.equals(user.getPhone())) {
@@ -303,6 +344,8 @@ public class UserService {
 			default:
 				System.out.println("1~3사이의 숫자만 입력하세요.");
 			}
+		} else {
+			System.out.println("ID , PW 입력 오류");
 		}
 		return user;
 
@@ -311,16 +354,17 @@ public class UserService {
 	public void DeleteUser(Scanner scanner, Member user, List<Member> members) {
 
 		System.out.println("회원 탈퇴를 위해 인증을 진행 합니다.");
-		System.out.println("ID 입력 : ");
+		System.out.print("ID 입력 : ");
 		String id = scanner.next();
-		System.out.println("PW 입력 : ");
+		System.out.print("PW 입력 : ");
 		String pw = scanner.next();
-		System.out.println("핸드폰 번호 입력 : ");
+		System.out.print("핸드폰 번호 입력 : ");
 		String phone = scanner.next();
 
 		if (id.equals(user.getId()) && pw.equals(user.getPw()) && phone.equals(user.getPhone())) {
 			System.out.println("정말 삭제하시겠습니까?");
 			System.out.println("1.Yes | 2.No");
+			System.out.print(">>>");
 			int select = scanner.next().charAt(0);
 
 			switch (select) {
@@ -331,7 +375,6 @@ public class UserService {
 						if (members.get(i).getId().equals(user.getId())) {
 							System.out.println(user.getName() + "님 안녕히 가세요 .");
 							members.remove(i);
-							Main.main(null);
 						} // if end
 					} // if end
 				} // for end
@@ -356,10 +399,11 @@ public class UserService {
 		System.out.println("현재 잔고 : " + user.getMoney());
 		System.out.print("충전 할 금액 입력 : ");
 		int chargeMoney = scanner.nextInt();
-		user.setMoney(chargeMoney+user.getMoney());
+		user.setMoney(chargeMoney + user.getMoney());
 		System.out.println("충전 완료!");
 		System.out.println("현재 잔고 : " + user.getMoney());
 
 	}
 
 } // MemberService Class end
+
